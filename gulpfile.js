@@ -1,92 +1,82 @@
-var gulp = require('gulp');
-var inject = require('gulp-inject');
-var webserver = require('gulp-webserver');
-var htmlclean = require('gulp-htmlclean');
-var cleanCSS = require('gulp-clean-css');
-var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
-var del = require('del');
+/* globals console, __dirname, require */
+"use strict";
 
-var paths = {
-    src: 'src/**/*',
-    srcHTML: 'src/**/*.html',
-    srcCSS: 'src/**/*.css',
-    srcJS: 'src/**/*.js',
-    tmp: 'tmp',
-    tmpIndex: 'tmp/index.html',
-    tmpCSS: 'tmp/**/*.css',
-    tmpJS: 'tmp/**/*.js',
-    dist: 'dist',
-    distIndex: 'dist/index.html',
-    distCSS: 'dist/**/*.css',
-    distJS: 'dist/**/*.js'
+const gulp = require("gulp");
+const changed = require("gulp-changed");
+const concat = require("gulp-concat");
+const rename = require("gulp-rename");
+const runSequence = require("run-sequence");
+const sass = require("gulp-sass");
+const sourcemaps = require("gulp-sourcemaps");
+const uglify = require("gulp-uglify");
+const directoryMap = require("gulp-directory-map");
+const karmaServer = require("karma").Server;
+
+const CONST = {
+    SRC_FOLDER: "src",
+    DIST_FOLDER: "dist",
+    DIST_FILENAME_JS: "masterMind.js",
+    MIN_SUFFIX: ".min.js",
+    JS_SOURCE_FILES: [
+        "src/js/core.js",
+        "src/js/Peg.js",
+        "src/js/GameManager.js"
+    ],
+    SCSS_FOLDER: "src/sass/*.scss"
 };
 
-gulp.task('html', function () {
-    return gulp.src(paths.srcHTML).pipe(gulp.dest(paths.tmp));
+function concatAndMinify(src, fileName){
+    return gulp.src(src)
+        .pipe(sourcemaps.init())
+        .pipe(concat(fileName))
+        // The "changed" task needs to know the destination directory upfront
+        .pipe(changed(CONST.DIST_FOLDER))
+        .pipe(gulp.dest(CONST.DIST_FOLDER))
+        .pipe(rename({
+            extname: CONST.MIN_SUFFIX
+        }))
+        .pipe(uglify({
+            mangle: false
+        }))
+        .pipe(sourcemaps.write(".", {
+            includeContent: true,
+            sourceRoot: "."
+        }))
+        .pipe(gulp.dest(CONST.DIST_FOLDER));
+}
+
+/* Tasks */
+
+gulp.task("coverage", function (done) {
+    // Use Karma only for the sake of producing a code coverage report
+    new karmaServer({
+        configFile: __dirname + "/test/karma.conf.js"
+    }, done).start();
 });
 
-gulp.task('css', function () {
-    return gulp.src(paths.srcCSS).pipe(gulp.dest(paths.tmp));
+gulp.task("scss", function(){
+    gulp.src(CONST.SCSS_FOLDER)
+        .pipe(sourcemaps.init())
+        .pipe(sass.sync().on("error", sass.logError))
+        .pipe(sourcemaps.write("."))
+        .pipe(gulp.dest(CONST.DIST_FOLDER));
 });
 
-gulp.task('js', function () {
-    return gulp.src(paths.srcJS).pipe(gulp.dest(paths.tmp));
+gulp.task("dist", function() {
+    concatAndMinify(CONST.JS_SOURCE_FILES, CONST.DIST_FILENAME_JS);
 });
 
-gulp.task('copy', ['html', 'css', 'js']);
-
-gulp.task('inject', ['copy'], function () {
-    var css = gulp.src(paths.tmpCSS);
-    var js = gulp.src(paths.tmpJS);
-    return gulp.src(paths.tmpIndex)
-        .pipe(inject( css, { relative:true } ))
-        .pipe(inject( js, { relative:true } ))
-        .pipe(gulp.dest(paths.tmp));
-});
-
-gulp.task('serve', ['inject'], function () {
-    return gulp.src(paths.tmp)
-        .pipe(webserver({
-            port: 3000,
-            livereload: true
-        }));
-});
-
-gulp.task('watch', ['serve'], function () {
-    gulp.watch(paths.src, ['inject']);
-});
-
-gulp.task('default', ['watch']);
-
-gulp.task('html:dist', function () {
-    return gulp.src(paths.srcHTML)
-        .pipe(htmlclean())
-        .pipe(gulp.dest(paths.dist));
-});
-gulp.task('css:dist', function () {
-    return gulp.src(paths.srcCSS)
-        .pipe(concat('style.min.css'))
-        .pipe(cleanCSS())
-        .pipe(gulp.dest(paths.dist));
-});
-gulp.task('js:dist', function () {
-    return gulp.src(paths.srcJS)
-        .pipe(concat('script.min.js'))
-        .pipe(uglify())
-        .pipe(gulp.dest(paths.dist));
-});
-gulp.task('copy:dist', ['html:dist', 'css:dist', 'js:dist']);
-gulp.task('inject:dist', ['copy:dist'], function () {
-    var css = gulp.src(paths.distCSS);
-    var js = gulp.src(paths.distJS);
-    return gulp.src(paths.distIndex)
-        .pipe(inject( css, { relative:true } ))
-        .pipe(inject( js, { relative:true } ))
-        .pipe(gulp.dest(paths.dist));
-});
-gulp.task('build', ['inject:dist']);
-
-gulp.task('clean', function () {
-    del([paths.tmp, paths.dist]);
+gulp.task("default", function(callback){
+    runSequence(
+        "dist",
+        "scss",
+        function(error){
+            if(error){
+                console.log(error.message);
+            }
+            else{
+                console.log("BUILD FINISHED SUCCESSFULLY");
+            }
+            callback(error);
+        });
 });
