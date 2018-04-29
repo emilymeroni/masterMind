@@ -9,12 +9,6 @@
     };
 
     /**
-     * @type {Set<mastermind.peg.Peg>}
-     * @private
-     */
-    mastermind.hole.Hole.prototype._availablePegs = undefined;
-
-    /**
      * @type {mastermind.peg.Peg}
      * @private
      */
@@ -28,8 +22,6 @@
 
     mastermind.hole.Hole.prototype._init = function() {
         this.node = this._renderNode();
-        this._availablePegs = this._initAvailablePegs();
-        console.log(this._availablePegs);
     };
 
     mastermind.hole.Hole.prototype._attachEvents = function() {
@@ -38,19 +30,8 @@
 
     mastermind.hole.Hole.prototype._handleClick = function() {
         if(this._assignedPeg === undefined) {
-            this._showAvailablePegs();
+            // notify
         }
     };
-
-    mastermind.hole.Hole.prototype._showAvailablePegs = function() {
-       // TODO open a popup with all the pegs
-    };
-
-    /**
-     @abstract
-     */
-    mastermind.hole.Hole.prototype._initAvailablePegs = function() {
-        throw new Error("Abstract method!");
-    }
 
 })();

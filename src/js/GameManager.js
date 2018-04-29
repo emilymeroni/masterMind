@@ -21,6 +21,8 @@
         const hole3 = new mastermind.hole.CodeHole({});
         const hole4 = new mastermind.hole.CodeHole({});
 
+        const pegChooser = mastermind.PegChooser.getInstance();
+
         document.body.appendChild(peg1.node);
         document.body.appendChild(peg2.node);
         document.body.appendChild(peg3.node);
@@ -31,6 +33,7 @@
         document.body.appendChild(hole2.node);
         document.body.appendChild(hole3.node);
         document.body.appendChild(hole4.node);
+        document.body.appendChild(pegChooser.node);
     };
 
 })();

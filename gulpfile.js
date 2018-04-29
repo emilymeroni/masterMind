@@ -23,6 +23,7 @@ const CONST = {
         "src/js/peg/KeyPeg.js",
         "src/js/hole/Hole.js",
         "src/js/hole/CodeHole.js",
+        "src/js/PegChooser.js",
         "src/js/GameManager.js"
     ],
     SCSS_FOLDER: "src/sass/*.scss"
