@@ -9,17 +9,20 @@ const runSequence = require("run-sequence");
 const sass = require("gulp-sass");
 const sourcemaps = require("gulp-sourcemaps");
 const uglify = require("gulp-uglify");
-const directoryMap = require("gulp-directory-map");
-const karmaServer = require("karma").Server;
+const webserver = require("gulp-webserver");
 
 const CONST = {
     SRC_FOLDER: "src",
     DIST_FOLDER: "dist",
-    DIST_FILENAME_JS: "masterMind.js",
+    DIST_FILENAME_JS: "mastermind.js",
     MIN_SUFFIX: ".min.js",
     JS_SOURCE_FILES: [
         "src/js/core.js",
-        "src/js/Peg.js",
+        "src/js/peg/Peg.js",
+        "src/js/peg/CodePeg.js",
+        "src/js/peg/KeyPeg.js",
+        "src/js/hole/Hole.js",
+        "src/js/hole/CodeHole.js",
         "src/js/GameManager.js"
     ],
     SCSS_FOLDER: "src/sass/*.scss"
@@ -47,11 +50,13 @@ function concatAndMinify(src, fileName){
 
 /* Tasks */
 
-gulp.task("coverage", function (done) {
-    // Use Karma only for the sake of producing a code coverage report
-    new karmaServer({
-        configFile: __dirname + "/test/karma.conf.js"
-    }, done).start();
+gulp.task("serve", ["dist", "scss"], function () {
+    return gulp.src(CONST.DIST_FOLDER)
+        .pipe(webserver({
+            port: 3000,
+            livereload: true,
+            open: true
+        }));
 });
 
 gulp.task("scss", function(){
@@ -62,7 +67,12 @@ gulp.task("scss", function(){
         .pipe(gulp.dest(CONST.DIST_FOLDER));
 });
 
-gulp.task("dist", function() {
+gulp.task("copy", function () {
+    gulp.src(CONST.SRC_FOLDER + "/index.html")
+        .pipe(gulp.dest(CONST.DIST_FOLDER));
+});
+
+gulp.task("dist", ["copy"], function() {
     concatAndMinify(CONST.JS_SOURCE_FILES, CONST.DIST_FILENAME_JS);
 });
 
