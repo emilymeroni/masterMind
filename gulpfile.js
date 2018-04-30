@@ -23,6 +23,11 @@ const CONST = {
         "src/js/peg/KeyPeg.js",
         "src/js/hole/Hole.js",
         "src/js/hole/CodeHole.js",
+        "src/js/hole/KeyHole.js",
+        "src/js/row/Row.js",
+        "src/js/row/CodeRow.js",
+        "src/js/row/KeyRow.js",
+        "src/js/rowholder/RowHolder.js",
         "src/js/PegChooser.js",
         "src/js/GameManager.js"
     ],

@@ -2,6 +2,7 @@
     'use strict';
 
     const CSS_NODE = 'masterMindHole';
+    const CSS_ACTIVE = 'masterMindHole--active';
 
     mastermind.hole.Hole = function(params) {
         this._init();
@@ -30,8 +31,17 @@
 
     mastermind.hole.Hole.prototype._handleClick = function() {
         if(this._assignedPeg === undefined) {
-            // notify
+            this.activateHole();
+            // notify the row, so that it sets the correct active hole to active
         }
+    };
+
+    mastermind.hole.Hole.prototype.activateHole = function() {
+        this.node.classList.add(CSS_ACTIVE);
+    };
+
+    mastermind.hole.Hole.prototype.deactivateHole = function() {
+        this.node.classList.remove(CSS_ACTIVE);
     };
 
 })();
