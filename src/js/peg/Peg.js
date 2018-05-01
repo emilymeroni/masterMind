@@ -9,11 +9,11 @@
     mastermind.peg.Peg = function(params) {
 
         // TODO: This color MUST be from the existing ones only, otherwise throw error
-        this.color = params.color === undefined ? this._getRandomColor() : params.color;
+        this._color = params.color === undefined ? this._getRandomColor() : params.color;
         this.node = this._renderNode();
     };
 
-    mastermind.peg.Peg.prototype.color = undefined;
+    mastermind.peg.Peg.prototype._color = undefined;
 
     /**
      * @type {HTMLElement} The peg node
@@ -23,7 +23,7 @@
     mastermind.peg.Peg.prototype._renderNode = function() {
         const node = document.createElement('div');
         node.classList.add(CSS_NODE);
-        node.style.setProperty(CSS_VARIABLE_COLOR, this.color);
+        node.style.setProperty(CSS_VARIABLE_COLOR, this._color);
         return node;
     };
 
@@ -37,5 +37,9 @@
      */
     mastermind.peg.Peg.prototype.getAvailableColors = function() {
         throw new Error("Abstract method!");
+    };
+
+    mastermind.peg.Peg.prototype.getColor = function() {
+        return this._color;
     }
 })();

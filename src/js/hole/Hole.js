@@ -35,10 +35,18 @@
      * @param {mastermind.peg.CodePeg} peg
      */
     mastermind.hole.Hole.prototype.insertPeg = function (peg) {
-        this.node.classList.add(CSS_NODE_FILLED);
-        this.node.insertAdjacentElement('afterend', peg.node);
-        this._assignedPeg = peg;
+        const pegToInsert = this._createPegWithColor(peg.getColor());
+        this.node.insertAdjacentElement('afterend', pegToInsert.node);
+        this._assignedPeg = pegToInsert;
 
+        this.node.classList.add(CSS_NODE_FILLED);
     };
+
+    /**
+     @abstract
+     */
+    mastermind.hole.Hole.prototype._createPegWithColor = function(color) {
+        throw new Error("Abstract method!");
+    }
 
 })();

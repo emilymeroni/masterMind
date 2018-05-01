@@ -49,4 +49,10 @@
         this.node.classList.remove(CSS_ACTIVE);
     };
 
+    mastermind.hole.Hole.prototype._createPegWithColor = function(color) {
+        return new mastermind.peg.CodePeg({
+            color: color
+        });
+    }
+
 })();
