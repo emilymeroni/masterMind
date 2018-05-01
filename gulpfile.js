@@ -61,7 +61,6 @@ gulp.task("serve", ["dist"], function () {
     return gulp.src(".")
         .pipe(webserver({
             port: 3000,
-            livereload: true,
             open: true
         }));
 });

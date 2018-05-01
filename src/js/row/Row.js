@@ -40,7 +40,7 @@
 
     mastermind.row.Row.prototype._init = function(params) {
         this._rowHolder = params.rowHolder;
-        this._holes = this._getHoles(params.holeCount);
+        this._holes = this._initHoles(params.holeCount);
         this.node = this._renderNode();
     };
 
@@ -48,7 +48,7 @@
      * @param {number} holeCount the amount of holes for this row
      * @private
      */
-    mastermind.row.Row.prototype._getHoles = function(holeCount) {
+    mastermind.row.Row.prototype._initHoles = function(holeCount) {
         let holes = [];
         for(let i = 0; i < holeCount; i++) {
             holes.push(this._initHole());
@@ -80,6 +80,20 @@
      */
     mastermind.row.Row.prototype.getActiveHole = function() {
         return this._activeHole;
+    };
+
+    /**
+     * @returns {Array.<mastermind.hole.Hole>}
+     */
+    mastermind.row.Row.prototype.getHoles = function() {
+        return this._holes;
+    };
+
+    mastermind.row.Row.prototype.isFilledWithPegs = function() {
+        const holesNotFilled = this._holes.find(function(hole) {
+            return hole.hasPegAssigned() === false;
+        });
+        return holesNotFilled === false;
     };
 
 })();

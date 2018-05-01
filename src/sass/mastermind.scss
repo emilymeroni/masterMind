@@ -45,11 +45,11 @@
 .masterMindHole {
   background-color: #ffdcb05e;
   box-shadow: inset 1px 1px 10px #333;
-  border: 1px solid transparent;
+  border: 2px solid transparent;
 }
 
 .masterMindHole--filled {
-  display: none;
+  border: 0;
 }
 
 .masterMindCodeHole {
@@ -60,7 +60,7 @@
   cursor: pointer;
 }
 
-.masterMindCodeHole--active {
+.masterMindHole--active {
   animation: border-pulsate 1s infinite;
 }
 
@@ -99,6 +99,7 @@
   max-width: 380px;
   padding: 40px 10px;
   background: url('background.jpg');
+  border-radius: 10px;
 }
 
 .mastermindPegChooser {

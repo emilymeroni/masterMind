@@ -81,6 +81,10 @@
         if(activeHole !== undefined) {
             activeHole.insertPeg(peg);
         }
+
+        if(this._codeRow.isFilledWithPegs() === true) {
+            // TODO: event
+        }
     };
 
 })();

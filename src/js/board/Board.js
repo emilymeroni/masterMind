@@ -46,9 +46,10 @@
     mastermind.board.Board.prototype._initRowHolders = function(rowNumber, holeCount) {
         let rowHolders = [];
         for(let i = 0; i < rowNumber; i++) {
-            rowHolders.push(new mastermind.rowholder.RowHolder({
+            const rowHolder = new mastermind.rowholder.RowHolder({
                 holeCount: holeCount
-            }));
+            });
+            rowHolders.push(rowHolder);
         }
         return rowHolders;
     };

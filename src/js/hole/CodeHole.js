@@ -9,7 +9,6 @@
     mastermind.hole.HOLE_ACTIVATED = 'holeActivated';
 
     const CSS_NODE = 'masterMindCodeHole';
-    const CSS_ACTIVE = 'masterMindCodeHole--active';
 
     /**
      * @param params
@@ -39,14 +38,9 @@
         if (this.hasPegAssigned() === false) {
             this.notifyObservers(mastermind.hole.HOLE_ACTIVATED, this);
         }
-    };
-
-    mastermind.hole.CodeHole.prototype.activateHole = function () {
-        this.node.classList.add(CSS_ACTIVE);
-    };
-
-    mastermind.hole.CodeHole.prototype.deactivateHole = function () {
-        this.node.classList.remove(CSS_ACTIVE);
+        else {
+            this._removeAssignedPeg();
+        }
     };
 
     mastermind.hole.Hole.prototype._createPegWithColor = function(color) {
