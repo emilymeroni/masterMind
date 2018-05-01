@@ -57,7 +57,7 @@ function concatAndMinify(src, fileName){
 
 /* Tasks */
 
-gulp.task("serve", ["dist", "scss"], function () {
+gulp.task("serve", ["dist"], function () {
     return gulp.src(".")
         .pipe(webserver({
             port: 3000,
@@ -74,14 +74,18 @@ gulp.task("scss", function(){
         .pipe(gulp.dest(CONST.DIST_FOLDER));
 });
 
-gulp.task("dist", function() {
+gulp.task('copy', function () {
+    return gulp.src(CONST.SRC_FOLDER + '/img/background.jpg')
+        .pipe(gulp.dest(CONST.DIST_FOLDER));
+});
+
+gulp.task("dist", ["copy", "scss"], function() {
     concatAndMinify(CONST.JS_SOURCE_FILES, CONST.DIST_FILENAME_JS);
 });
 
 gulp.task("default", function(callback){
     runSequence(
         "dist",
-        "scss",
         function(error){
             if(error){
                 console.log(error.message);

@@ -23,10 +23,18 @@
      */
     mastermind.board.Board.prototype._rowHolders = undefined;
 
+    /**
+     * @type {mastermind.rowholder.RowHolder}
+     * @private
+     */
+    mastermind.board.Board.prototype._activeRow = undefined;
+
     mastermind.board.Board.prototype._init = function(params) {
         const rowNumber = params.rowNumber === undefined ? 8 : params.rowNumber;
         this._rowHolders = this._initRowHolders(rowNumber, params.holeCount);
         this.node = this._renderNode();
+        // initialise the active row to be the first
+        this.activateRowHolder(this._rowHolders[0]);
 
     };
     /**
@@ -54,6 +62,22 @@
         });
 
         return node;
+    };
+
+    mastermind.board.Board.prototype.getActiveRowHolder = function() {
+      return this._activeRow;
+    };
+
+    /**
+     * @param {mastermind.rowholder.RowHolder} rowHolder
+     */
+    mastermind.board.Board.prototype.activateRowHolder = function(rowHolder) {
+        this._activeRow = rowHolder;
+
+        this._rowHolders.forEach(function(rowHolder) {
+            rowHolder.deactivate();
+        });
+        rowHolder.activate();
     };
 
 })();

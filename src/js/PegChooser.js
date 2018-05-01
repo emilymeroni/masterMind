@@ -2,6 +2,13 @@
 
     'use strict';
 
+    /** @event mastermind.PegChooser#PEG_CHOSEN */
+
+    /**
+     * @type {string}
+     */
+    mastermind.PegChooser.PEG_CHOSEN = 'pegChosen';
+
     let uniqueInstance = undefined;
 
     /**
@@ -9,6 +16,8 @@
      * @constructor
      */
     const PegChooser = function() {
+
+        luga.extend(luga.Notifier, this);
 
         const CSS_NODE = 'mastermindPegChooser';
 
@@ -27,6 +36,7 @@
         const renderNode = function() {
             const node = document.createElement('div');
             node.classList.add(CSS_NODE);
+
             return node;
         };
 
@@ -46,7 +56,7 @@
                 color: color
             });
             peg.node.addEventListener('click', function() {
-               // Notify my listeners I was clicked
+                self.notifyObservers(mastermind.PegChooser.PEG_CHOSEN, peg);
             });
 
             return peg;

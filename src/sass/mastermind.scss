@@ -6,8 +6,9 @@
 
 /** VARIABLES **/
 :root {
-  --peg-size: 20px;
-  --peg-size-small: 10px;
+  --peg-size: 30px;
+  --peg-size-small: 15px;
+  --peg-color: #000000;
 }
 
 @mixin gameRoundElement($small: false) {
@@ -20,24 +21,47 @@
   border-radius: 50%;
 }
 
+@mixin ballGradient($small: false) {
+  $size: calc(var(--peg-size) / 3);
+  @if $small {
+    $size: calc(var(--peg-size-small) / 3);
+  }
+  background: radial-gradient(circle at $size $size, var(--peg-color), #0c0c0c);
+}
+
 /** PEGS **/
 .masterMindCodePeg {
   @include gameRoundElement();
+  @include ballGradient();
+  cursor: pointer;
 }
 
 .masterMindKeyPeg {
   @include gameRoundElement(true);
+  @include ballGradient(true);
 }
 
 /** HOLES **/
 .masterMindHole {
-  background-color: transparent;
-  border: 1px solid gray;
+  background-color: #ffdcb05e;
+  box-shadow: inset 1px 1px 10px #333;
+  border: 1px solid transparent;
+}
+
+.masterMindHole--filled {
+  display: none;
 }
 
 .masterMindCodeHole {
   @include gameRoundElement();
+}
+
+.masterMindRowHolder--active .masterMindCodeHole {
   cursor: pointer;
+}
+
+.masterMindCodeHole--active {
+  animation: border-pulsate 1s infinite;
 }
 
 .masterMindKeyHole {
@@ -45,9 +69,50 @@
 }
 
 .masterMindRowHolder {
-  border: 1px solid black;
+  display: flex;
+  &:not(:last-child) {
+    border-bottom: 2px solid #313131;
+  }
 }
 
 .masterMindRow {
   display: flex;
+  padding: 5px;
+}
+
+.mastermindCodeRow {
+  flex-grow: 1;
+  justify-content: space-around;
+  border-right: 2px solid #313131;
+}
+
+// ... well, a grid really
+.mastermindKeyRow {
+  display: grid;
+  flex-shrink: 0;
+  width: 50px;
+  grid-template-columns: 50% 50%;
+  grid-gap: 5px;
+}
+
+.masterMindBoard {
+  max-width: 380px;
+  padding: 40px 10px;
+  background: url('background.jpg');
+}
+
+.mastermindPegChooser {
+  display: flex;
+}
+
+@keyframes border-pulsate {
+  0% {
+    border-color: transparent;
+  }
+  50% {
+    border-color: #ffdfdf;
+  }
+  100% {
+    border-color: transparent;
+  }
 }

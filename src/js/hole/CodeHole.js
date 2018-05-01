@@ -37,7 +37,6 @@
 
     mastermind.hole.CodeHole.prototype._handleClick = function () {
         if (this.hasPegAssigned() === false) {
-            this.activateHole();
             this.notifyObservers(mastermind.hole.HOLE_ACTIVATED, this);
         }
     };

@@ -35,6 +35,10 @@
      * Listens to the "mastermind.hole.HOLE_ACTIVATED event notifications broadcast by the CodeHole
      */
     mastermind.row.CodeRow.prototype.setActiveHole = function(activeHole) {
+        if(this._rowHolder.isActive() === false) {
+            return;
+        }
+        this._activeHole = activeHole;
         this._holes.forEach(function(hole) {
            hole.deactivateHole();
         });

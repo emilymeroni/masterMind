@@ -4,6 +4,8 @@
 
     const CSS_NODE = 'masterMindPeg';
 
+    const CSS_VARIABLE_COLOR = '--peg-color';
+
     mastermind.peg.Peg = function(params) {
 
         // TODO: This color MUST be from the existing ones only, otherwise throw error
@@ -21,7 +23,7 @@
     mastermind.peg.Peg.prototype._renderNode = function() {
         const node = document.createElement('div');
         node.classList.add(CSS_NODE);
-        node.style.backgroundColor = this.color;
+        node.style.setProperty(CSS_VARIABLE_COLOR, this.color);
         return node;
     };
 

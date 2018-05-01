@@ -4,6 +4,7 @@
     /**
      * @typedef {Object} mastermind.row.RowParams
      * @property {Array<mastermind.peg.Peg>|undefined} pegs
+     * @property {mastermind.rowholder.RowHolder} rowHolder
      * @property {number|undefined} holeCount
      *
      */
@@ -31,10 +32,16 @@
      */
     mastermind.row.Row.prototype._activeHole = undefined;
 
+    /**
+     * @type {mastermind.rowholder.RowHolder}
+     * @protected
+     */
+    mastermind.row.Row.prototype._rowHolder = undefined;
+
     mastermind.row.Row.prototype._init = function(params) {
+        this._rowHolder = params.rowHolder;
         this._holes = this._getHoles(params.holeCount);
         this.node = this._renderNode();
-
     };
 
     /**
@@ -66,6 +73,13 @@
      */
     mastermind.row.Row.prototype._initHole = function() {
         throw new Error("Abstract method!");
+    };
+
+    /**
+     * @returns {mastermind.hole.Hole}
+     */
+    mastermind.row.Row.prototype.getActiveHole = function() {
+        return this._activeHole;
     };
 
 })();
