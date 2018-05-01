@@ -58,7 +58,7 @@ function concatAndMinify(src, fileName){
 /* Tasks */
 
 gulp.task("serve", ["dist", "scss"], function () {
-    return gulp.src(CONST.DIST_FOLDER)
+    return gulp.src(".")
         .pipe(webserver({
             port: 3000,
             livereload: true,
@@ -74,14 +74,7 @@ gulp.task("scss", function(){
         .pipe(gulp.dest(CONST.DIST_FOLDER));
 });
 
-gulp.task("copy", function () {
-    gulp.src(CONST.SRC_FOLDER + "/index.html")
-        .pipe(gulp.dest(CONST.DIST_FOLDER));
-    gulp.src(CONST.SRC_FOLDER + "/componentOverview.html")
-        .pipe(gulp.dest(CONST.DIST_FOLDER));
-});
-
-gulp.task("dist", ["copy"], function() {
+gulp.task("dist", function() {
     concatAndMinify(CONST.JS_SOURCE_FILES, CONST.DIST_FILENAME_JS);
 });
 

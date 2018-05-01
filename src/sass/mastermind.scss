@@ -11,11 +11,12 @@
 }
 
 @mixin gameRoundElement($small: false) {
+  $size: var(--peg-size);
   @if $small {
-    --peg-size: var(--peg-size-small);
+    $size: var(--peg-size-small);
   }
-  width: var(--peg-size);
-  height: var(--peg-size);
+  width: $size;
+  height: $size;
   border-radius: 50%;
 }
 

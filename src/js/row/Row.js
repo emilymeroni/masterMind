@@ -21,12 +21,13 @@
 
     /**
      * @type {Array<mastermind.hole.Hole>}
+     * @protected
      */
     mastermind.row.Row.prototype._holes = undefined;
 
     /**
      * @type {mastermind.hole.Hole}
-     * @private
+     * @protected
      */
     mastermind.row.Row.prototype._activeHole = undefined;
 
