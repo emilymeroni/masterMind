@@ -1,0 +1,52 @@
+// TODO Split up
+
+* {
+  box-sizing: border-box;
+}
+
+/** VARIABLES **/
+:root {
+  --peg-size: 20px;
+  --peg-size-small: 10px;
+}
+
+@mixin gameRoundElement($small: false) {
+  @if $small {
+    --peg-size: var(--peg-size-small);
+  }
+  width: var(--peg-size);
+  height: var(--peg-size);
+  border-radius: 50%;
+}
+
+/** PEGS **/
+.masterMindCodePeg {
+  @include gameRoundElement();
+}
+
+.masterMindKeyPeg {
+  @include gameRoundElement(true);
+}
+
+/** HOLES **/
+.masterMindHole {
+  background-color: transparent;
+  border: 1px solid gray;
+}
+
+.masterMindCodeHole {
+  @include gameRoundElement();
+  cursor: pointer;
+}
+
+.masterMindKeyHole {
+  @include gameRoundElement(true);
+}
+
+.masterMindRowHolder {
+  border: 1px solid black;
+}
+
+.masterMindRow {
+  display: flex;
+}

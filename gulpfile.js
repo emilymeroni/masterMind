@@ -28,6 +28,7 @@ const CONST = {
         "src/js/row/CodeRow.js",
         "src/js/row/KeyRow.js",
         "src/js/rowholder/RowHolder.js",
+        "src/js/board/Board.js",
         "src/js/PegChooser.js",
         "src/js/GameManager.js"
     ],
@@ -75,6 +76,8 @@ gulp.task("scss", function(){
 
 gulp.task("copy", function () {
     gulp.src(CONST.SRC_FOLDER + "/index.html")
+        .pipe(gulp.dest(CONST.DIST_FOLDER));
+    gulp.src(CONST.SRC_FOLDER + "/componentOverview.html")
         .pipe(gulp.dest(CONST.DIST_FOLDER));
 });
 

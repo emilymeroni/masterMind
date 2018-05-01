@@ -2,11 +2,9 @@
     'use strict';
 
     const CSS_NODE = 'masterMindHole';
-    const CSS_ACTIVE = 'masterMindHole--active';
 
     mastermind.hole.Hole = function(params) {
         this._init();
-        this._attachEvents();
     };
 
     /**
@@ -25,23 +23,11 @@
         this.node = this._renderNode();
     };
 
-    mastermind.hole.Hole.prototype._attachEvents = function() {
-        this.node.addEventListener('click', this._handleClick());
-    };
-
-    mastermind.hole.Hole.prototype._handleClick = function() {
-        if(this._assignedPeg === undefined) {
-            this.activateHole();
-            // notify the row, so that it sets the correct active hole to active
-        }
-    };
-
-    mastermind.hole.Hole.prototype.activateHole = function() {
-        this.node.classList.add(CSS_ACTIVE);
-    };
-
-    mastermind.hole.Hole.prototype.deactivateHole = function() {
-        this.node.classList.remove(CSS_ACTIVE);
+    /**
+     * @returns {boolean} the hole has a peg inside it
+     */
+    mastermind.hole.Hole.prototype.hasPegAssigned = function() {
+        return this._assignedPeg !== undefined;
     };
 
 })();
