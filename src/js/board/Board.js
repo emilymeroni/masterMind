@@ -43,7 +43,6 @@
         // initialise the active row to be the first
         this.activateRowHolder(this._rowHolders[0]);
         this._initCodeToGuessRow(holeCount);
-        this.node.appendChild(this._codeToGuessRow.node);
 
     };
     /**
@@ -112,16 +111,24 @@
                 pegsToGuess[i] = null;
             }
         }
+
+        if(verifiedCodePegs.length === data.codePegs.length) {
+            alert('you won!');
+            this.getActiveRowHolder().getKeyRow().fillWithPegs(verifiedCodePegs);
+            return;
+        }
+
         for (let i = 0; i < data.codePegs.length; i++) {
-            const foundPeg = pegsToGuess.find(function (peg) {
-                if(peg !== null) {
-                    return peg.getColor() === data.codePegs[i].getColor();
+            const foundPeg = data.codePegs.find(function (peg) {
+                if (pegsToGuess[i] !== null) {
+                    return peg.getColor() === pegsToGuess[i].getColor();
                 }
             });
             if (foundPeg !== undefined) {
                 verifiedCodePegs.push(new mastermind.peg.KeyPeg({
                     color: mastermind.peg.KeyPeg.colors.get(mastermind.peg.CORRECT_POSITION)
                 }));
+                pegsToGuess[i] = null;
             }
         }
         this.getActiveRowHolder().getKeyRow().fillWithPegs(verifiedCodePegs);
