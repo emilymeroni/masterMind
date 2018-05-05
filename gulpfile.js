@@ -10,6 +10,7 @@ const sass = require("gulp-sass");
 const sourcemaps = require("gulp-sourcemaps");
 const uglify = require("gulp-uglify");
 const webserver = require("gulp-webserver");
+const watch = require('gulp-watch');
 
 const CONST = {
     SRC_FOLDER: "src",
@@ -94,4 +95,9 @@ gulp.task("default", function(callback){
             }
             callback(error);
         });
+});
+
+gulp.task('stream', function () {
+    // Endless stream mode
+    return watch('js/**/*.js', concatAndMinify(CONST.JS_SOURCE_FILES, CONST.DIST_FILENAME_JS));
 });

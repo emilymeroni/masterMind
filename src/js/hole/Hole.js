@@ -5,8 +5,17 @@
     const CSS_NODE_FILLED = 'masterMindHole--filled';
     const CSS_ACTIVE = 'masterMindHole--active';
 
+    /**
+     * @typedef {Object} mastermind.hole.HoleParams
+     * @property {mastermind.peg.Peg|undefined} peg
+     *
+     */
+
     mastermind.hole.Hole = function(params) {
         this._init();
+        if(params !== undefined && params.peg !== undefined) {
+            this.insertPeg(peg);
+        }
     };
 
     /**
@@ -33,9 +42,12 @@
     };
 
     /**
-     * @param {mastermind.peg.CodePeg} peg
+     * @param {mastermind.peg.Peg|undefined} peg
      */
     mastermind.hole.Hole.prototype.insertPeg = function (peg) {
+        if(peg === undefined) {
+            return;
+        }
         const pegToInsert = this._createPegWithColor(peg.getColor());
         this.node.appendChild(pegToInsert.node);
         this._assignedPeg = pegToInsert;
@@ -52,7 +64,7 @@
 
     mastermind.hole.Hole.prototype.getAssignedPeg = function() {
         return this._assignedPeg;
-    }
+    };
 
     mastermind.hole.Hole.prototype.activate = function () {
         this.node.classList.add(CSS_ACTIVE);

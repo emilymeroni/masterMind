@@ -46,4 +46,10 @@
         activeHole.activate();
     };
 
+    mastermind.row.CodeRow.prototype.fillWithRandomPegs = function() {
+        this._holes.forEach(function(hole) {
+            hole.insertPeg(new mastermind.peg.CodePeg({}));
+        });
+    };
+
 })();

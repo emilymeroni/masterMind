@@ -1,6 +1,13 @@
 (function () {
     'use strict';
 
+    /** @event mastermind.rowholder.RowHolder#IS_FILLED_WITH_PEGS */
+
+    /**
+     * @type {string}
+     */
+    mastermind.rowholder.IS_FILLED_WITH_PEGS = 'isFilledWithPegs';
+
     /**
      * @typedef {Object} mastermind.row.RowParams
      * @property {number|undefined} holeCount
@@ -12,9 +19,14 @@
 
     /**
      * @param {mastermind.row.RowParams} params
+     *
+     * @fires mastermind.rowholder.RowHolder.IS_FILLED_WITH_PEGS
      * @constructor
+     *
+     * @extends luga.Notifier
      */
     mastermind.rowholder.RowHolder = function (params) {
+        luga.extend(luga.Notifier, this);
         this._init(params);
     };
 
@@ -73,18 +85,29 @@
         this.node.classList.remove(CSS_NODE_ACTIVE);
     };
 
+
+    mastermind.rowholder.RowHolder.prototype.getKeyRow = function () {
+        return this._keyRow;
+    };
+
     /**
      * @param {mastermind.peg.CodePeg} peg
      */
-    mastermind.rowholder.RowHolder.prototype.insertCodePeg = function(peg) {
+    mastermind.rowholder.RowHolder.prototype.insertCodePeg = function (peg) {
         const activeHole = this._codeRow.getActiveHole();
-        if(activeHole !== undefined) {
+        if (activeHole !== undefined && activeHole.hasPegAssigned() === false) {
             activeHole.insertPeg(peg);
         }
 
-        if(this._codeRow.isFilledWithPegs() === true) {
-            // TODO: event
+        if (this._codeRow.isFilledWithPegs() === true) {
+            const codeRowPegs = [];
+            this._codeRow.getHoles().forEach(function (hole) {
+                codeRowPegs.push(hole.getAssignedPeg());
+            });
+
+            this.notifyObservers(mastermind.rowholder.IS_FILLED_WITH_PEGS, {
+                codePegs: codeRowPegs
+            });
         }
     };
-
 })();

@@ -43,7 +43,7 @@
         }
     };
 
-    mastermind.hole.Hole.prototype._createPegWithColor = function(color) {
+    mastermind.hole.CodeHole.prototype._createPegWithColor = function(color) {
         return new mastermind.peg.CodePeg({
             color: color
         });

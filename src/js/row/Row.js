@@ -3,8 +3,7 @@
 
     /**
      * @typedef {Object} mastermind.row.RowParams
-     * @property {Array<mastermind.peg.Peg>|undefined} pegs
-     * @property {mastermind.rowholder.RowHolder} rowHolder
+     * @property {mastermind.rowholder.RowHolder|undefined} rowHolder
      * @property {number|undefined} holeCount
      *
      */
@@ -89,11 +88,35 @@
         return this._holes;
     };
 
+    // TODO unify with method below
+    mastermind.row.Row.prototype.fillWithPegs = function(pegs) {
+        this._holes.forEach(function(hole, index) {
+            hole.insertPeg(pegs[index]);
+        });
+    };
+
+    /**
+     * @abstract
+     * @private
+     */
+    mastermind.row.Row.prototype.fillWithRandomPegs = function() {
+        throw new Error("Abstract method!");
+    };
+
     mastermind.row.Row.prototype.isFilledWithPegs = function() {
         const holesNotFilled = this._holes.find(function(hole) {
             return hole.hasPegAssigned() === false;
         });
-        return holesNotFilled === false;
+        return holesNotFilled === undefined;
+    };
+
+    mastermind.row.Row.prototype.getPegs = function() {
+        let pegs = [];
+        this._holes.forEach(function(hole) {
+            // Could also return undefined which may be a valid value
+            pegs.push(hole.getAssignedPeg());
+        });
+        return pegs;
     };
 
 })();

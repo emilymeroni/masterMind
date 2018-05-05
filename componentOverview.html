@@ -16,11 +16,11 @@
     const peg4 = new mastermind.peg.CodePeg({});
 
     const peg5 = new mastermind.peg.KeyPeg({
-        color: mastermind.peg.KeyPeg.colors.get('CORRECT_POSITION_AND_COLOR')
+        color: mastermind.peg.KeyPeg.colors.get(mastermind.peg.CORRECT_POSITION_AND_COLOR)
     });
 
     const peg6 = new mastermind.peg.KeyPeg({
-        color: mastermind.peg.KeyPeg.colors.get('CORRECT_POSITION')
+        color: mastermind.peg.KeyPeg.colors.get(mastermind.peg.CORRECT_POSITION)
     });
 
     const hole1 = new mastermind.hole.CodeHole({});
