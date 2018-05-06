@@ -14,7 +14,7 @@
     mastermind.peg.KeyPeg.prototype = Object.create(mastermind.peg.Peg.prototype);
 
     mastermind.peg.KeyPeg.colors = new Map()
-        .set(mastermind.peg.CORRECT_POSITION_AND_COLOR, 'black')
+        .set(mastermind.peg.CORRECT_POSITION_AND_COLOR, '#4a4a4a')
         .set(mastermind.peg.CORRECT_POSITION, 'white');
 
     mastermind.peg.KeyPeg.prototype.getAvailableColors = function() {
