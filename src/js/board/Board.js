@@ -81,6 +81,49 @@
         return node;
     };
 
+    mastermind.board.Board.prototype._isLastRowHolder = function () {
+        return this._rowHolders.indexOf(this._activeRowHolder + 1) === this._rowHolders.length;
+    };
+
+
+    mastermind.board.Board.prototype._discoverPegsCorrectPositionAndColor = function (guessingPegs, guessingPegsCopy, pegColorMap, keyPegs) {
+        const victoryCode = this._codeToGuessRow.getPegs();
+        for (let i = 0; i < guessingPegs.length; i++) {
+            const guessingColor = guessingPegs[i].getColor();
+            if (guessingColor === victoryCode[i].getColor()) {
+                // insert black peg in key pegs
+                keyPegs.push(new mastermind.peg.KeyPeg({
+                    color: mastermind.peg.KeyPeg.colors.get(mastermind.peg.CORRECT_POSITION_AND_COLOR)
+                }));
+
+                guessingPegsCopy[i] = null;
+                pegColorMap.set(guessingColor, pegColorMap.get(guessingColor) - 1);
+            }
+        }
+    };
+
+    mastermind.board.Board.prototype._discoverPegsCorrectColorWrongPosition = function(guessingPegsCopy, pegColorMap, keyPegs) {
+        for (let i = 0; i < guessingPegsCopy.length; i++) {
+            if(guessingPegsCopy[i] === null) {
+                continue;
+            }
+
+            const guessingColor = guessingPegsCopy[i].getColor();
+            if (pegColorMap.get(guessingColor) !== undefined && pegColorMap.get(guessingColor) > 0) {
+
+                keyPegs.push(new mastermind.peg.KeyPeg({
+                    color: mastermind.peg.KeyPeg.colors.get(mastermind.peg.CORRECT_POSITION)
+                }));
+
+                pegColorMap.set(guessingColor, pegColorMap.get(guessingColor) - 1);
+            }
+        }
+    };
+
+    mastermind.board.Board.prototype._getNextRowHolder = function() {
+        return this._rowHolders[this._rowHolders.indexOf(this._activeRowHolder) + 1];
+    };
+
     mastermind.board.Board.prototype.getActiveRowHolder = function () {
         return this._activeRowHolder;
     };
@@ -97,60 +140,28 @@
         rowHolder.activate();
     };
 
-    //TODO: refactor me!!
     mastermind.board.Board.prototype.verifyCode = function (data) {
-        const pegsToGuess = this._codeToGuessRow.getPegs();
-        const pegsToGuessTemp = Object.assign(pegsToGuess);
-        const guessingPegsTemp = Object.assign(data.codePegs);
+
+        const victoryCode = this._codeToGuessRow.getPegs();
+        const userCodeCopy = data.codePegs.slice(0);
+        const pegColorMap = mastermind.utils.getPegColorCountMap(victoryCode);
         const keyPegs = [];
 
-        console.log(pegsToGuess);
-
         // First, find the pegs that are in the correct position and color
-        for (let i = 0; i < data.codePegs.length; i++) {
-            // insert black peg in key pegs
-            if (data.codePegs[i].getColor() === pegsToGuess[i].getColor()) {
-                keyPegs.push(new mastermind.peg.KeyPeg({
-                    color: mastermind.peg.KeyPeg.colors.get(mastermind.peg.CORRECT_POSITION_AND_COLOR)
-                }));
+        this._discoverPegsCorrectPositionAndColor(data.codePegs, userCodeCopy, pegColorMap, keyPegs);
 
-                pegsToGuessTemp[i] = null;
-                guessingPegsTemp[i] = null;
-            }
-        }
-
-        if (keyPegs.length === pegsToGuess.length) {
-            alert('you won!');
-            this.getActiveRowHolder().getKeyRow().fillWithPegs(keyPegs);
-            this._revealCodeToGuess();
-            return;
-        }
-
-        for (let i = 0; i < guessingPegsTemp.length; i++) {
-
-            const foundPeg = pegsToGuessTemp.find(function(pegToGuess) {
-                if(guessingPegsTemp[i] !== null && pegToGuess !== null) {
-                    return pegToGuess.getColor() === guessingPegsTemp[i].getColor();
-                }
-            });
-
-            if(foundPeg !== undefined) {
-                keyPegs.push(new mastermind.peg.KeyPeg({
-                    color: mastermind.peg.KeyPeg.colors.get(mastermind.peg.CORRECT_POSITION)
-                }));
-
-                pegsToGuessTemp.splice(pegsToGuessTemp.indexOf(foundPeg), 1);
-            }
+        if (keyPegs.length !== victoryCode.length) {
+            this._discoverPegsCorrectColorWrongPosition(userCodeCopy, pegColorMap, keyPegs);
         }
 
         this.getActiveRowHolder().getKeyRow().fillWithPegs(keyPegs);
 
-        if (this._rowHolders.indexOf(this._activeRowHolder + 1) === this._rowHolders.length) {
-            alert('you lost!');
+        if (keyPegs.length === victoryCode.length || this._isLastRowHolder()) {
             this._revealCodeToGuess();
             return;
         }
-        this.activateRowHolder(this._rowHolders[this._rowHolders.indexOf(this._activeRowHolder) + 1]);
+
+        this.activateRowHolder(this._getNextRowHolder());
 
     };
 
